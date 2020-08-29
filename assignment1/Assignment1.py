@@ -38,8 +38,7 @@ def get_entropy_of_dataset(df):
 
 def get_entropy_of_attribute(df, attribute):
     entropy_of_attribute = 0
-    unique_values = df[attribute].unique()
-    for i in unique_values:
+    for i in df[attribute].unique():
         sub_df = df[df[attribute] == i]
         entropy = get_entropy_of_dataset(sub_df)
         entropy_of_attribute += (sub_df.shape[0]/df.shape[0]) * entropy
