@@ -10,24 +10,23 @@ import random
 # output:int/float/double/large
 
 
-def calculate_entropy(p, n):
+def calculate_entropy(target, total):
     entropy = 0
-    if p > 0 and p+n > 0:
-        entropy += (-p/(p+n))*np.log2(p/(p+n))
-    if n > 0 and p+n > 0:
-        entropy += (-n/(p+n))*np.log2(n/(p+n))
+    for i in target:
+        if target[i] > 0:
+            entropy += (-target[i]/total)*np.log2(target[i]/total)
     return entropy
 
 
 def get_entropy_of_dataset(df):
     entropy = 0
-    p = n = 0
+    target = dict()
     for i in df.iloc[:, -1]:
-        if i == "yes":
-            p += 1
-        elif i == "no":
-            n += 1
-    entropy = calculate_entropy(p, n)
+        if str(i) in target:
+            target[str(i)] += 1
+        else:
+            target[str(i)] = 1
+    entropy = calculate_entropy(target, df.shape[0])
     return entropy
 
 
