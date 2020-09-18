@@ -16,11 +16,11 @@ def not_in_frontier(node, frontier):
     return True
 
 
-def replace_cost(frontier, node, cost):
+def replace_cost(frontier, node, cost,P_node):
     for i in frontier:
         if i[1] == node:
             if i[0] > cost:
-                i = (cost, node)
+                i = (cost, node, P_node)
             break
 
 
@@ -37,13 +37,13 @@ def UCS_Traversal(cost, start_point, goals):
         if(node in goals):
             print(list(visited)+[node])
             break
-        visited.append(node)
+        visited.append(node,parent)
         for i in range(1, len(cost)):
             if cost[node][i] > 0 and i not in visited:
                 if not_in_frontier(i, frontier):
                     frontier.append((path_cost + cost[node][i], i, node))
                 else:
-                    replace_cost(frontier, i, path_cost + cost[node][i])
+                    replace_cost(frontier, i, path_cost + cost[node][i],node)
     return []
 
 
