@@ -25,27 +25,26 @@ def replace_cost(frontier, node, cost,P_node):
 
 
 def UCS_Traversal(cost, start_point, goals):
-    visited = []
+    visited=[]
+    path=[]
     frontier = [(0, start_point, 0)]
     while len(frontier):
         frontier.sort(key=lambda x: x[0])
-        print(frontier)
         ele = frontier.pop(0)
         path_cost = ele[0]
         node = ele[1]
         parent = ele[2]
         if(node in goals):
-            #print(list(visited)+[node])
-            print("Total cost for the shortest path is",path_cost,"\n")
-            print("The path is \n")
-            print(node)
+            path.append(node)
             while(parent!=0): #Parent of start_node is 0
                 for i in visited:
                     if parent==i[0]:
-                        print(i[0])
+                        path.append(i[0])
                         parent=i[1]
-            break
-        visited.append(node,parent)
+                        break
+            path.reverse()
+            return path
+        visited.append((node,parent))
         for i in range(1, len(cost)):
             if cost[node][i] > 0 and i not in visited:
                 if not_in_frontier(i, frontier):
@@ -114,3 +113,17 @@ def tri_traversal(cost, heuristic, start_point, goals):
     l.append(t2)
     l.append(t3)
     return l
+
+cost = [[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+            [0, 0, 5, 9, -1, 6, -1, -1, -1, -1, -1],
+            [0, -1, 0, 3, -1, -1, 9, -1, -1, -1, -1],
+            [0, -1, 2, 0, 1, -1, -1, -1, -1, -1, -1],
+            [0, 6, -1, -1, 0, -1, -1, 5, 7, -1, -1],
+            [0, -1, -1, -1, 2, 0, -1, -1, -1, 2, -1],
+            [0, -1, -1, -1, -1, -1, 0, -1, -1, -1, -1],
+            [0, -1, -1, -1, -1, -1, -1, 0, -1, -1, -1],
+            [0, -1, -1, -1, -1, 2, -1, -1, 0, -1, 8],
+            [0, -1, -1, -1, -1, -1, -1, -1, -1, 0, 7],
+            [0, -1, -1, -1, -1, -1, -1, -1, -1, -1, 0]]
+goals= [6, 7, 10]           
+UCS_Traversal(cost,1,goals)
