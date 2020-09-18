@@ -35,7 +35,15 @@ def UCS_Traversal(cost, start_point, goals):
         node = ele[1]
         parent = ele[2]
         if(node in goals):
-            print(list(visited)+[node])
+            #print(list(visited)+[node])
+            print("Total cost for the shortest path is",path_cost,"\n")
+            print("The path is \n")
+            print(node)
+            while(parent!=0): #Parent of start_node is 0
+                for i in visited:
+                    if parent==i[0]:
+                        print(i[0])
+                        parent=i[1]
             break
         visited.append(node,parent)
         for i in range(1, len(cost)):
