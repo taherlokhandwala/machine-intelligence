@@ -1,6 +1,3 @@
-import queue
-
-
 def A_star_Traversal(
     # add your parameters
 ):
@@ -16,11 +13,11 @@ def not_in_frontier(node, frontier):
     return True
 
 
-def replace_cost(frontier, node, cost,P_node):
+def replace_cost(frontier, node, cost):
     for i in frontier:
         if i[1] == node:
             if i[0] > cost:
-                i = (cost, node, P_node)
+                i = (cost, node)
             break
 
 
@@ -35,23 +32,15 @@ def UCS_Traversal(cost, start_point, goals):
         node = ele[1]
         parent = ele[2]
         if(node in goals):
-            #print(list(visited)+[node])
-            print("Total cost for the shortest path is",path_cost,"\n")
-            print("The path is \n")
-            print(node)
-            while(parent!=0): #Parent of start_node is 0
-                for i in visited:
-                    if parent==i[0]:
-                        print(i[0])
-                        parent=i[1]
+            print(list(visited)+[node])
             break
-        visited.append(node,parent)
+        visited.append(node)
         for i in range(1, len(cost)):
             if cost[node][i] > 0 and i not in visited:
                 if not_in_frontier(i, frontier):
                     frontier.append((path_cost + cost[node][i], i, node))
                 else:
-                    replace_cost(frontier, i, path_cost + cost[node][i],node)
+                    replace_cost(frontier, i, path_cost + cost[node][i])
     return []
 
 
@@ -77,25 +66,20 @@ def DFS_Traversal(cost, goals, visited, frontier):
 
 '''
 Function tri_traversal - performs DFS, UCS and A* traversals and returns the path for each of these traversals 
-
 n - Number of nodes in the graph
 m - Number of goals ( Can be more than 1)
 1<=m<=n
 Cost - Cost matrix for the graph of size (n+1)x(n+1)
 IMP : The 0th row and 0th column is not considered as the starting index is from 1 and not 0. 
 Refer the sample test case to understand this better
-
 Heuristic - Heuristic list for the graph of size 'n+1' 
 IMP : Ignore 0th index as nodes start from index value of 1
 Refer the sample test case to understand this better
-
 start_point - single start node
 goals - list of size 'm' containing 'm' goals to reach from start_point
-
 Return : A list containing a list of all traversals [[],[],[]]
 1<=m<=n
 cost[n][n] , heuristic[n][n], start_point, goals[m]
-
 NOTE : you are allowed to write other helper functions that you can call in the given fucntion
 '''
 
