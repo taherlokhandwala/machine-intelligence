@@ -1,3 +1,6 @@
+import queue
+
+
 def A_star_Traversal(
     # add your parameters
 ):
@@ -6,19 +9,45 @@ def A_star_Traversal(
     return l
 
 
-def UCS_Traversal(
-    # add your parameters
-):
-    l = []
-
-    return l
-
-
-frontier = []
+def not_in_frontier(node, frontier):
+    for i in frontier:
+        if node == i[1]:
+            return False
+    return True
 
 
-def DFS_Traversal(cost, goals, visited):
-    global frontier
+def replace_cost(frontier, node, cost):
+    for i in frontier:
+        if i[1] == node:
+            if i[0] > cost:
+                i = (cost, node)
+            break
+
+
+def UCS_Traversal(cost, start_point, goals):
+    visited = []
+    frontier = [(0, start_point, 0)]
+    while len(frontier):
+        frontier.sort(key=lambda x: x[0])
+        print(frontier)
+        ele = frontier.pop(0)
+        path_cost = ele[0]
+        node = ele[1]
+        parent = ele[2]
+        if(node in goals):
+            print(list(visited)+[node])
+            break
+        visited.append(node)
+        for i in range(1, len(cost)):
+            if cost[node][i] > 0 and i not in visited:
+                if not_in_frontier(i, frontier):
+                    frontier.append((path_cost + cost[node][i], i, node))
+                else:
+                    replace_cost(frontier, i, path_cost + cost[node][i])
+    return []
+
+
+def DFS_Traversal(cost, goals, visited, frontier):
     if len(frontier):
         start_point = frontier.pop()
         visited.append(start_point)
@@ -33,7 +62,7 @@ def DFS_Traversal(cost, goals, visited):
         while j >= 0:
             frontier.append(l[j][0])
             j -= 1
-        return DFS_Traversal(cost, goals, visited)
+        return DFS_Traversal(cost, goals, visited, frontier)
     else:
         return []
 
@@ -65,11 +94,10 @@ NOTE : you are allowed to write other helper functions that you can call in the 
 
 def tri_traversal(cost, heuristic, start_point, goals):
     l = []
-    frontier.append(start_point)
-    t1 = DFS_Traversal(cost, goals, [])
-    t2 = UCS_Traversal(
-        # send whatever parameters you require
-    )
+    t1 = DFS_Traversal(cost, goals, [], [start_point])
+
+    t2 = UCS_Traversal(cost, start_point, goals)
+
     t3 = A_star_Traversal(
         # send whatever parameters you require
     )
