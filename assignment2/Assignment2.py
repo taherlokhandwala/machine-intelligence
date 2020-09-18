@@ -1,20 +1,16 @@
 import queue
 
-
-def A_star_Traversal(
-    # add your parameters
-):
-    l = []
-
-    return l
-
-
 def not_in_frontier(node, frontier):
     for i in frontier:
         if node == i[1]:
             return False
     return True
 
+def not_in_visited(node, visited):
+    for i in visited:
+        if node == i[0]:
+            return False
+    return True
 
 def replace_cost(frontier, node, cost,P_node):
     for i in frontier:
@@ -23,8 +19,41 @@ def replace_cost(frontier, node, cost,P_node):
                 i = (cost, node, P_node)
             break
 
+def A_star_Traversal(cost,start_point, goals, heuristic):
+    return []
 
-def UCS_Traversal(cost, start_point, goals):
+def UCSG_Traversal(cost, start_point, goals): #Checks all goal states
+    visited=[]
+    path=[]
+    mincost=-1
+    frontier = [(0, start_point, 0)]
+    while len(frontier):
+        frontier.sort(key=lambda x: x[0])
+        ele = frontier.pop(0)
+        path_cost = ele[0]
+        node = ele[1]
+        parent = ele[2]
+        if(node in goals):
+            if mincost==-1 or path_cost<mincost:
+                path=[]
+                mincost=path_cost
+                path.append(node)
+                while(parent!=0): #Parent of start_node is 0
+                    for i in visited:
+                        if parent==i[0]:
+                            path.append(i[0])
+                            parent=i[1]
+                path.reverse()
+        visited.append((node,parent))
+        for i in range(1, len(cost)):
+            if cost[node][i] > 0 and not_in_visited(i,visited):
+                if not_in_frontier(i, frontier):
+                    frontier.append((path_cost + cost[node][i], i, node))
+                else:
+                    replace_cost(frontier, i, path_cost + cost[node][i],node)
+    return path
+
+def UCS_Traversal(cost, start_point, goals): #Returns after reaching first goal state
     visited=[]
     path=[]
     frontier = [(0, start_point, 0)]
@@ -46,13 +75,12 @@ def UCS_Traversal(cost, start_point, goals):
             return path
         visited.append((node,parent))
         for i in range(1, len(cost)):
-            if cost[node][i] > 0 and i not in visited:
+            if cost[node][i] > 0 and not_in_visited(i,visited):
                 if not_in_frontier(i, frontier):
                     frontier.append((path_cost + cost[node][i], i, node))
                 else:
                     replace_cost(frontier, i, path_cost + cost[node][i],node)
     return []
-
 
 def DFS_Traversal(cost, goals, visited, frontier):
     if len(frontier):
@@ -105,25 +133,11 @@ def tri_traversal(cost, heuristic, start_point, goals):
 
     t2 = UCS_Traversal(cost, start_point, goals)
 
-    t3 = A_star_Traversal(
-        # send whatever parameters you require
-    )
+    t3 = A_star_Traversal(cost,start_point, goals, heuristic)
 
-    l.append(t1)
+    l.append(t1)    
     l.append(t2)
     l.append(t3)
     return l
 
-cost = [[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-            [0, 0, 5, 9, -1, 6, -1, -1, -1, -1, -1],
-            [0, -1, 0, 3, -1, -1, 9, -1, -1, -1, -1],
-            [0, -1, 2, 0, 1, -1, -1, -1, -1, -1, -1],
-            [0, 6, -1, -1, 0, -1, -1, 5, 7, -1, -1],
-            [0, -1, -1, -1, 2, 0, -1, -1, -1, 2, -1],
-            [0, -1, -1, -1, -1, -1, 0, -1, -1, -1, -1],
-            [0, -1, -1, -1, -1, -1, -1, 0, -1, -1, -1],
-            [0, -1, -1, -1, -1, 2, -1, -1, 0, -1, 8],
-            [0, -1, -1, -1, -1, -1, -1, -1, -1, 0, 7],
-            [0, -1, -1, -1, -1, -1, -1, -1, -1, -1, 0]]
-goals= [6, 7, 10]           
-UCS_Traversal(cost,1,goals)
+
