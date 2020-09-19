@@ -20,6 +20,37 @@ def replace_cost(frontier, node, cost,P_node):
             break
 
 def A_star_Traversal(cost,start_point, goals, heuristic):
+    frontier=[]
+    visited=[]
+    path=[]
+    #path_cost,node,parent,heuristic
+    frontier.append((0,start_point,0,heuristic[start_point]))
+    while len(frontier):
+        frontier = sorted(frontier,key=lambda x:x[1],reverse=True)
+        frontier = sorted(frontier,key=lambda x:x[0]+x[3])
+        ele = frontier.pop(0)
+        path_cost = ele[0]
+        node = ele[1]
+        parent = ele[2]
+        if(node in goals):
+            path.append(node)
+            while(parent!=0): #Parent of start_node is 0
+                for i in visited:
+                    if parent==i[0]:
+                        path.append(i[0])
+                        parent=i[1]
+                        break
+            path.reverse()
+
+            return path
+        #node,parent
+        visited.append((node,parent))
+        for i in range(1, len(cost)):
+            if cost[node][i] > 0 and not_in_visited(i,visited):
+                if not_in_frontier(i, frontier):
+                    frontier.append((path_cost + cost[node][i], i, node,heuristic[i]))
+                else:
+                    replace_cost(frontier, i, path_cost + cost[node][i],node)
     return []
 
 def UCSG_Traversal(cost, start_point, goals): #Checks all goal states
@@ -130,11 +161,8 @@ NOTE : you are allowed to write other helper functions that you can call in the 
 def tri_traversal(cost, heuristic, start_point, goals):
     l = []
     t1 = DFS_Traversal(cost, goals, [], [start_point])
-
     t2 = UCS_Traversal(cost, start_point, goals)
-
     t3 = A_star_Traversal(cost,start_point, goals, heuristic)
-
     l.append(t1)    
     l.append(t2)
     l.append(t3)
