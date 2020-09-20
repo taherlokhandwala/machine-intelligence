@@ -23,7 +23,7 @@ def replace_cost_UCS(frontier, node, cost, P_node):
 def replace_cost_Astar(frontier, node, cost, P_node, heuristic):
     for i in frontier:
         if i[1] == node:
-            if i[0] + i[3] > cost + heuristic:
+            if i[0] > cost:
                 i = (cost, node, P_node, heuristic)
             break
 
